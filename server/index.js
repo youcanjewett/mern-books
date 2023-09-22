@@ -15,13 +15,14 @@ app.use(cors());
 //object for easy access
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+app.use("/uploads", express.static("uploads"));
 
 app.get("/api/books", async (req, res) => {
   try {
     const data = await Book.find({});
     res.json(data);
   } catch (error) {
-    res.status(500).json({ error: "an error occurred while fetchinng data" });
+    res.status(500).json({ error: "an error occurred while fetching data" });
   }
 });
 

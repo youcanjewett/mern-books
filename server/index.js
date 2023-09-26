@@ -85,6 +85,44 @@ app.post("/api/books", upload.single("thumbnail"), async (req, res) => {
   }
 });
 
+//editing a book
+app.put("/api/books", upload.single("thumbnail"), async (req, res) => {
+  try {
+
+    const bookId = req.body.bookId;
+
+    const updateBook = {
+      title: req.body.title,
+      slug: req.body.slug,
+      stars: req.body.stars,
+      description: req.body.description,
+      category: req.body.category,
+      
+    };
+
+    if(req.file) {
+      updateBook.thumbnail = req.file.filename;
+    }
+
+    await Book.findByIdAndUpdate(bookId, updateBook);
+    res.json("Data submitted");
+  } catch (error) {
+    res.status(500).json({ error: "an error occurred while fetching data" });
+  }
+});
+
+
+app.delete("/api/books/:id", async(req,res) => {
+  const bookId = req.params.id;
+
+  try {
+    await Book.deleteOne({_id: bookId});
+    res.json("How dare you!" + req.body.bookId);
+  } catch (error) {
+    res.json(error);
+  }
+})
+
 app.get("*", (req, res) => {
   res.sendStatus("404");
 });
